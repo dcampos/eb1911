@@ -1,0 +1,9 @@
+table.prettytable > tbody {
+    background-color: transparent;
+}
+
+/* Sub-article navigator */
+
+th[style*="background-color: #CCCCFF"] {
+    background-color: transparent !important;
+}

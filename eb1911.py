@@ -22,6 +22,7 @@ $ ./eb1911.py list -o entrylist.txt
 $ ./eb1911.py normalize -i entries/all.json -o entries/normalized.json
 """
 
+import os
 import re
 import sys
 from typing import Dict, List
@@ -42,7 +43,11 @@ LICENSE_URL = 'https://creativecommons.org/licenses/by-sa/3.0/'
 SOURCE = 'https://en.wikisource.org/wiki/1911_Encyclop%C3%A6dia_Britannica'
 URI = 'https://en.wikisource.org/wiki/1911_Encyclop%C3%A6dia_Britannica'
 DESCRIPTION = TITLE
-
+CSS_LINKS = (
+    '<link rel="stylesheet" href="~/css/site.styles.css" type="text/css">'
+    '<link rel="stylesheet" href="~/css/ext.gadget.css" type="text/css">'
+    '<link rel="stylesheet" href="~/css/custom.css" type="text/css">'
+)
 
 def show_progress(pat, i, num_entries=None):
     percent = i / num_entries
@@ -149,12 +154,13 @@ class Fetcher:
                 result[title] = change
         return result
 
-    def update(self, start=0, limit=None, timestamp=None):
+    def update(self, start=0, limit=None, timestamp=None, normalize=False):
         if not self.in_file:
             raise Exception('Update requires an input file')
         changes = self.list_changes(timestamp)
         num_entries = self.num_entries()
         def result():
+            normalizer = Normalizer()
             for line in self.read_input(start, limit):
                 data = json.loads(line)
                 # print(data)
@@ -170,6 +176,8 @@ class Fetcher:
                         data['content'] = result['text']['*']
                         data['revid'] = change['revid']
                         data['pageid'] = change['pageid']
+                        if normalize:
+                            data = normalizer.normalize(data)
                 yield json.dumps(data).decode('utf-8')
         self.output(result, num_entries)
 
@@ -248,15 +256,24 @@ class Fetcher:
         print(f'Duplicated: {duplicated}')
         return dictionary
 
-    def write_slob(self):
+    def write_slob(self, goldendict=False):
         dictionary = self.prepare_entries()
         with slob.create(self.out_file, min_bin_size=512*1024, observer=observer) as s:
             num_entries = len(dictionary)
+            if not goldendict:
+                print('Note: goldendict compatibility not set')
             for i, entry in enumerate(dictionary, 1):
                 # percent = round(i / num_entries * 100)
                 # print(f"Adding {i} of {num_entries} ({percent}%)", end='\r')
+                content = entry[1]
+                if goldendict:
+                    content = re.sub('href=\"((?!(http|/|#)).*?)\"', r'href="gdlookup://localhost/\1"', content)
+                content = CSS_LINKS + content
                 show_progress("Adding {} of {}", i, num_entries)
-                s.add(entry[1].encode('utf-8'), *entry[0], content_type=HTML_TEXT)
+                s.add(content.encode('utf-8'), *entry[0], content_type=HTML_TEXT)
+            include_types = {"js", "css", "images"}
+            include_path = os.path.join(os.path.dirname(__file__), 'include')
+            slob.add_dir(s, include_path, prefix='~/', include_only=include_types)
             # with open('playsound.png', 'rb') as png:
             #     data = png.read()
             #     s.add(data, 'playsound.png', 'image/png')
@@ -290,13 +307,17 @@ class Normalizer:
         article = value.group(1)
         article = article.replace('_', '%20')
         article = article.replace('/', '%2F')
-        return 'href=\"{article}\"'
+        return f'href=\"{article}\"'
 
     def fix_links(self, content):
         # Internal references
         content = re.sub('href=\"/wiki/1911_Encyclop%C3%A6dia_Britannica/(.*?)\"', self.normalize_ref, content)
         # Other pages
         content = re.sub('href=\"/wiki/', 'href=\"https://en.wikisource.org/wiki/', content)
+        # /w/ special image source
+        content = re.sub('src=\"/w/', 'src=\"https://en.wikisource.org/w/', content)
+        # Wikisource links, etc.
+        content = re.sub('href=\"((?!(http|/|#)).*?)\"', self.normalize_ref, content)
         return content
 
     def fix_imgs(self, content):
@@ -340,6 +361,7 @@ if __name__ == '__main__':
     parser.add_argument('--start', '-s', default=0, type=int, help='Start from this index')
     parser.add_argument('--limit', '-l', default=sys.maxsize, type=int, help='Process these many entries')
     parser.add_argument('--timestamp', '-t', default=sys.maxsize, type=str, help='Timstamp')
+    parser.add_argument('--goldendict', '-g', action='store_true', help='Optimize for goldendict')
     args = parser.parse_args()
 
     if args.cmd == 'list':
@@ -350,10 +372,10 @@ if __name__ == '__main__':
         fetcher.fetch(args.titles, missing=args.missing, normalize=args.normalize)
     elif args.cmd == 'update':
         fetcher = Fetcher(out_file=args.outfile, in_file=args.infile)
-        fetcher.update(limit=args.limit, start=args.start, timestamp=args.timestamp)
+        fetcher.update(limit=args.limit, start=args.start, timestamp=args.timestamp, normalize=args.normalize)
     elif args.cmd == 'slob':
         fetcher = Fetcher(out_file=args.outfile, in_file=args.infile)
-        fetcher.write_slob()
+        fetcher.write_slob(goldendict=args.goldendict)
     elif args.cmd == 'normalize':
         fetcher = Fetcher(out_file=args.outfile, in_file=args.infile)
         fetcher.normalize()
