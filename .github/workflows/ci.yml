@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches: 'master'
+  schedule:
+    - cron: 0 0 * * *
+
+jobs:
+  update:
+    name: Update
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: actions/setup-python@v3
+        with:
+          python-version: '3.8'
+          cache: 'pip'
+      - run: pip install -r requirements.txt
+      - name: Get the latest release
+        id: get_release
+        uses: dsaltares/fetch-gh-release-asset@master
+        with:
+          repo: "dcampos/eb1911"
+          version: "tags/nightly"
+          file: "all.json.bz2"
+          target: "data/all.json.bz2"
+          token: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Uncompress file
+      #   run: |
+      #     bunzip2 data/all.json.bz2
+
+      - name: Set vars
+        id: vars
+        run: |
+          echo "::set-output name=old_timestamp::$(echo ${{ steps.get_release.outputs.body }} | cut -f2 -d' ')"
+          echo "::set-output name=current_timestamp::$(date +'%Y%m%d%H%M%S')"
+
+      - name: Update articles
+        env:
+          OLD_TIMESTAMP: ${{ steps.vars.outputs.old_timestamp }}
+        run: |
+          ./eb1911.py update -i data/all.json.bz2 -o all.json -t $OLD_TIMESTAMP
+
+      - name: Compress result
+        run: |
+          bzip2 all.json
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: all.json.bz2
+          tag_name: nighly
+          body: "Timestamp: ${{ steps.vars.outputs.current_timestamp }}"
+
+      - name: Display the details
+        run: |
+          echo ${{ steps.get_release.outputs.version }}
+          echo ${{ steps.get_release.outputs.name }}
+          echo ${{ steps.get_release.outputs.body }}
+          ls -l data/

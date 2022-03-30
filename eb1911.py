@@ -112,7 +112,10 @@ class Fetcher:
         return missing
 
     def num_entries(self):
-        num_entries = sum(1 for _ in open(self.in_file))
+        if self.in_file and self.in_file.endswith('.json'):
+            num_entries = sum(1 for _ in open(self.in_file))
+        else:
+            num_entries = None
         return num_entries
 
     def list_pages(self, prefix=PREFIX):
@@ -371,6 +374,7 @@ if __name__ == '__main__':
         fetcher = Fetcher(out_file=args.outfile, in_file=args.infile)
         fetcher.fetch(args.titles, missing=args.missing, normalize=args.normalize)
     elif args.cmd == 'update':
+        # print('timestamp:', args.timestamp)
         fetcher = Fetcher(out_file=args.outfile, in_file=args.infile)
         fetcher.update(limit=args.limit, start=args.start, timestamp=args.timestamp, normalize=args.normalize)
     elif args.cmd == 'slob':
