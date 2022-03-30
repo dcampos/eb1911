@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches: 'master'
+  schedule:
+    - cron: 0 0 * * *
+
+jobs:
+  update:
+    name: Update
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Get the latest release
+        id: get_release
+        uses: stryd/fetch-release-asset@v1
+        with:  
+          access_token: ${{ secrets.GH_TOKEN }}
+          repo: "dcampos/eb1911"
+          version: "v0.1.0-alpha"
+          asset_name: "all.json.bz2"
