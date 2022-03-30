@@ -1,0 +1,88 @@
+name: CI
+
+on:
+  push:
+    branches: 'master'
+  schedule:
+    - cron: '0 15 * * *'
+
+jobs:
+  update:
+    name: Update
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: actions/setup-python@v3
+        with:
+          python-version: '3.8'
+          cache: 'pip'
+      - run: pip install -r requirements.txt
+
+      - name: Fetch the latest release
+        id: get_release
+        uses: dsaltares/fetch-gh-release-asset@master
+        with:
+          repo: "dcampos/eb1911"
+          # version: "tags/nightly"
+          file: "all.json.bz2"
+          target: "data/all.json.bz2"
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set vars
+        id: vars
+        run: |
+          echo "::set-output name=old_timestamp::$(echo '${{ steps.get_release.outputs.body }}' | head -1 | cut -f2 -d' ')"
+          echo "::set-output name=current_timestamp::$(date +'%Y%m%d%H%M%S')"
+          echo "${{ steps.get_release.outputs.body }}"
+
+      - name: Update articles
+        id: update
+        env:
+          OLD_TIMESTAMP: ${{ steps.vars.outputs.old_timestamp }}
+        run: |
+          ./eb1911.py update -n -i data/all.json.bz2 -o all.json -t $OLD_TIMESTAMP 2>&1 | tee output.txt
+
+      - name: Compress result
+        run: |
+          bzip2 all.json
+
+      - name: Create slob
+        env:
+          CUR_TIMESTAMP: ${{ steps.vars.outputs.current_timestamp }}
+        run: |
+          ./eb1911.py slob --no-progress -i all.json.bz2 -o eb1911.slob
+
+      - uses: rickstaa/action-create-tag@v1
+        with:
+          tag: "${{ steps.vars.outputs.current_timestamp }}"
+          message: "Latest release"
+
+      - run: |
+          echo 'CMD_OUTPUT<<EOF' >> $GITHUB_ENV
+          cat output.txt >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            all.json.bz2
+            eb1911.slob
+          name: "1911 Encyclopædia Britannica"
+          tag_name: ${{ steps.vars.outputs.current_timestamp }}
+          # body: "Timestamp: ${{ steps.vars.outputs.current_timestamp }}"
+          # body_path: output.txt
+          body: |
+            Timestamp: ${{ steps.vars.outputs.current_timestamp }}
+            Command output:
+            ```
+            ${{ env.CMD_OUTPUT }}
+            ```
+
+      - name: Display the details
+        run: |
+          echo ${{ steps.get_release.outputs.version }}
+          echo ${{ steps.get_release.outputs.name }}
+          echo ${{ steps.get_release.outputs.body }}
+          ls -l data/

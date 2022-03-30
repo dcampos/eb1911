@@ -68,10 +68,11 @@ def observer(event):
 
 class Fetcher:
 
-    def __init__(self, in_file=None, out_file=None):
+    def __init__(self, in_file=None, out_file=None, progress=True):
         self.site = mwclient.Site('en.wikisource.org', clients_useragent='EB1911/0.1')
         self.in_file = in_file
         self.out_file = out_file
+        self.progress = progress
 
     def output(self, func, count=None, pat='Processing {} of {}'):
         i = 1
@@ -79,7 +80,7 @@ class Fetcher:
             with open(self.out_file, 'w+') as out:
                 for entry in func():
                     out.write(entry + '\n')
-                    if count:
+                    if count and self.progress:
                         show_progress(pat, i, count)
                     i += 1
         else:
@@ -112,7 +113,10 @@ class Fetcher:
         return missing
 
     def num_entries(self):
-        num_entries = sum(1 for _ in open(self.in_file))
+        if self.in_file and self.in_file.endswith('.json'):
+            num_entries = sum(1 for _ in open(self.in_file))
+        else:
+            num_entries = None
         return num_entries
 
     def list_pages(self, prefix=PREFIX):
@@ -161,6 +165,7 @@ class Fetcher:
         num_entries = self.num_entries()
         def result():
             normalizer = Normalizer()
+            count = 0
             for line in self.read_input(start, limit):
                 data = json.loads(line)
                 # print(data)
@@ -171,6 +176,7 @@ class Fetcher:
                 if title in changes:
                     change = changes[title]
                     if change['revid'] > data['revid']:
+                        count += 1
                         print(f'==> Page updated: {title}', file=sys.stderr)
                         result = self.fetch_page(title)
                         data['content'] = result['text']['*']
@@ -179,6 +185,8 @@ class Fetcher:
                         if normalize:
                             data = normalizer.normalize(data)
                 yield json.dumps(data).decode('utf-8')
+            if count == 0:
+                print('Already up-to-date')
         self.output(result, num_entries)
 
     def fetch(self, titles, missing=False, normalize=True):
@@ -226,7 +234,8 @@ class Fetcher:
         duplicated = 0
         for line in self.read_input():
             count += 1
-            print(f'Reading entry {count}', end='\r')
+            if self.progress:
+                print(f'Reading entry {count}', end='\r')
             headwords = []
             data = json.loads(line)
             html = data['content']
@@ -269,7 +278,8 @@ class Fetcher:
                 if goldendict:
                     content = re.sub('href=\"((?!(http|/|#)).*?)\"', r'href="gdlookup://localhost/\1"', content)
                 content = CSS_LINKS + content
-                show_progress("Adding {} of {}", i, num_entries)
+                if self.progress:
+                    show_progress("Adding {} of {}", i, num_entries)
                 s.add(content.encode('utf-8'), *entry[0], content_type=HTML_TEXT)
             include_types = {"js", "css", "images"}
             include_path = os.path.join(os.path.dirname(__file__), 'include')
@@ -362,22 +372,21 @@ if __name__ == '__main__':
     parser.add_argument('--limit', '-l', default=sys.maxsize, type=int, help='Process these many entries')
     parser.add_argument('--timestamp', '-t', default=sys.maxsize, type=str, help='Timstamp')
     parser.add_argument('--goldendict', '-g', action='store_true', help='Optimize for goldendict')
+    parser.add_argument('--no-progress', '-N', action='store_false', help='Don\'t show progress')
     args = parser.parse_args()
 
+    fetcher = Fetcher(out_file=args.outfile, in_file=args.infile, progress=args.no_progress)
+
     if args.cmd == 'list':
-        fetcher = Fetcher(out_file=args.outfile, in_file=args.infile)
         fetcher.list_pages()
     elif args.cmd == 'fetch':
-        fetcher = Fetcher(out_file=args.outfile, in_file=args.infile)
         fetcher.fetch(args.titles, missing=args.missing, normalize=args.normalize)
     elif args.cmd == 'update':
-        fetcher = Fetcher(out_file=args.outfile, in_file=args.infile)
+        # print('timestamp:', args.timestamp)
         fetcher.update(limit=args.limit, start=args.start, timestamp=args.timestamp, normalize=args.normalize)
     elif args.cmd == 'slob':
-        fetcher = Fetcher(out_file=args.outfile, in_file=args.infile)
         fetcher.write_slob(goldendict=args.goldendict)
     elif args.cmd == 'normalize':
-        fetcher = Fetcher(out_file=args.outfile, in_file=args.infile)
         fetcher.normalize()
     # elif args.latest:
     #     fetcher = Fetcher()

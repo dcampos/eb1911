@@ -1,0 +1,4 @@
+bs4
+mwclient
+orjson
+git+https://github.com/itkach/slob.git#egg=slob
