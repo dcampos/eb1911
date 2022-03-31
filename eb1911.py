@@ -175,9 +175,10 @@ class Fetcher:
                 # print(revdata, file=sys.stderr)
                 if title in changes:
                     change = changes[title]
+                    change['done'] = True
                     if change['revid'] > data['revid']:
                         count += 1
-                        print(f'==> Page updated: {title}', file=sys.stderr)
+                        print(f'Page updated: {title}', file=sys.stderr)
                         result = self.fetch_page(title)
                         data['content'] = result['text']['*']
                         data['revid'] = change['revid']
@@ -185,6 +186,28 @@ class Fetcher:
                         if normalize:
                             data = normalizer.normalize(data)
                 yield json.dumps(data).decode('utf-8')
+
+            # Fetch nonexistent pages
+            for change in changes.values():
+                if 'done' in change:
+                    continue
+                count += 1
+                title = change['title']
+                if change['type'] == 'new':
+                    print(f'New page: {title}', file=sys.stderr)
+                else:
+                    print(f'Unknown page: {title}', file=sys.stderr)
+                res = self.fetch_page(title)
+                page = {
+                    'page': res['title'],
+                    'pageid': res['pageid'],
+                    'revid': res['revid'],
+                    'content': res['text']['*']
+                }
+                if normalize:
+                    page = normalizer.normalize(page)
+                yield json.dumps(page).decode('utf-8')
+
             if count == 0:
                 print('Already up-to-date')
         self.output(result, num_entries)
