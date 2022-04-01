@@ -34,7 +34,7 @@ import orjson as json
 import slob
 import itertools
 
-
+UA = 'EB1911/0.1.0 (dcampos@github/eb1911)'
 PREFIX = '1911 Encyclopædia Britannica'
 HTML_TEXT = 'text/html; charset=utf-8'
 TITLE = '1911 Encyclopædia Britannica'
@@ -69,7 +69,7 @@ def observer(event):
 class Fetcher:
 
     def __init__(self, in_file=None, out_file=None, progress=True):
-        self.site = mwclient.Site('en.wikisource.org', clients_useragent='EB1911/0.1')
+        self.site = mwclient.Site('en.wikisource.org', clients_useragent=UA)
         self.in_file = in_file
         self.out_file = out_file
         self.progress = progress
@@ -187,7 +187,7 @@ class Fetcher:
                             data = normalizer.normalize(data)
                 yield json.dumps(data).decode('utf-8')
 
-            # Fetch nonexistent pages
+            # Fetch missing pages
             for change in changes.values():
                 if 'done' in change:
                     continue
@@ -196,7 +196,7 @@ class Fetcher:
                 if change['type'] == 'new':
                     print(f'New page: {title}', file=sys.stderr)
                 else:
-                    print(f'Unknown page: {title}', file=sys.stderr)
+                    print(f'Missing page: {title}', file=sys.stderr)
                 res = self.fetch_page(title)
                 page = {
                     'page': res['title'],
@@ -210,6 +210,7 @@ class Fetcher:
 
             if count == 0:
                 print('Already up-to-date')
+
         self.output(result, num_entries)
 
     def fetch(self, titles, missing=False, normalize=True):

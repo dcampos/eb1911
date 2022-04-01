@@ -43,22 +43,25 @@ jobs:
         run: |
           ./eb1911.py update -n -i data/all.json.bz2 -o all.json -t $OLD_TIMESTAMP 2>&1 | tee output.txt
 
+      - name: Create slob dictionaries
+        env:
+          CUR_TIMESTAMP: ${{ steps.vars.outputs.current_timestamp }}
+        run: |
+          ./eb1911.py slob --no-progress -i all.json -o eb1911.slob
+          ./eb1911.py slob --no-progress -i all.json -o eb1911-gd.slob -g
+
       - name: Compress result
         run: |
           bzip2 all.json
 
-      - name: Create slob
-        env:
-          CUR_TIMESTAMP: ${{ steps.vars.outputs.current_timestamp }}
-        run: |
-          ./eb1911.py slob --no-progress -i all.json.bz2 -o eb1911.slob
-
-      - uses: rickstaa/action-create-tag@v1
+      - name: Create release tag
+        uses: rickstaa/action-create-tag@v1
         with:
           tag: "${{ steps.vars.outputs.current_timestamp }}"
           message: "Latest release"
 
-      - run: |
+      - name: Store commmand output
+        run: |
           echo 'CMD_OUTPUT<<EOF' >> $GITHUB_ENV
           cat output.txt >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
@@ -69,6 +72,7 @@ jobs:
           files: |
             all.json.bz2
             eb1911.slob
+            eb1911-gd.slob
           name: "1911 Encyclopædia Britannica"
           tag_name: ${{ steps.vars.outputs.current_timestamp }}
           # body: "Timestamp: ${{ steps.vars.outputs.current_timestamp }}"
