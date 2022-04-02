@@ -126,8 +126,6 @@ class Fetcher:
 
     def range_changed(self, data, ranges):
         volume, start, end = data['volume'], data['start'], data['end']
-        if 'Punic Wars' in data['page']:
-            print(volume, start, end)
         if volume not in ranges:
             return False
         for i in range(start, end + 1):
@@ -189,7 +187,7 @@ class Fetcher:
             if title.startswith(PREFIX):
                 result[title] = change
             elif title.startswith('Page:EB1911'):
-                print('Page:', title, file=sys.stderr)
+                print('Page updated:', title, file=sys.stderr)
                 m = re.match(r'Page:EB1911 - Volume (\d+).djvu/(\d+)', title)
                 volume = int(m.group(1))
                 index = int(m.group(2))
@@ -202,7 +200,6 @@ class Fetcher:
         if not self.in_file:
             raise Exception('Update requires an input file')
         changes, ranges = self.list_changes(timestamp)
-        print(ranges)
         num_entries = self.num_entries()
         def result():
             normalizer = Normalizer()
@@ -227,7 +224,7 @@ class Fetcher:
                 if page_changed or range_changed:
                     count += 1
                     if page_changed:
-                        print(f'Page updated: {title}', file=sys.stderr)
+                        print(f'Article updated: {title}', file=sys.stderr)
                     else:
                         print(f'Range updated: {title}', file=sys.stderr)
                     result = self.fetch_page(title)
