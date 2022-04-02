@@ -41,7 +41,7 @@ jobs:
         env:
           OLD_TIMESTAMP: ${{ steps.vars.outputs.old_timestamp }}
         run: |
-          ./eb1911.py update -n -i data/all.json.bz2 -o all.json -t $OLD_TIMESTAMP 2>&1 | tee output.txt
+          ./eb1911.py update -n -i data/all.json.bz2 -o all.json -T $OLD_TIMESTAMP 2>&1 | tee output.txt
 
       - name: Create slob dictionaries
         env:

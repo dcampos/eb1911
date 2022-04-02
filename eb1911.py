@@ -11,7 +11,7 @@ $ ./eb1911.py slob -n -i entries/all.json -o eb1911.slob
 
 2. Fetch all missing pages (normalized)
 
-$ ./eb1911.py fetch -m -n --titles @list2.txt -o /tmp/all.json -n
+$ ./eb1911.py fetch -m -n --titles @list2.txt -i data/all.json.bz -o /tmp/all.json -n
 
 3. Fetch a list of pages:
 
@@ -104,6 +104,37 @@ class Fetcher:
                 for line in itertools.islice(lines, start, start + limit):
                     yield line
 
+    def detect_range(self, data):
+        soup = BeautifulSoup(data['content'], 'html.parser')
+        volume = None
+        start = sys.maxsize
+        end = 0
+        for div in soup.find_all('span', {'class': 'pagenum'}):
+            try:
+                page_name = div['data-page-name']
+                m = re.match(r'Page:EB1911 - Volume (\d+).djvu/\d+', page_name)
+                if not volume:
+                    volume = int(m.group(1))
+                index = int(div['data-page-index'])
+            except KeyError:
+                break
+            start = min(start, index)
+            end = max(end, index)
+        else:
+            return (volume, start, end)
+        return (volume, None, None)
+
+    def range_changed(self, data, ranges):
+        volume, start, end = data['volume'], data['start'], data['end']
+        if 'Punic Wars' in data['page']:
+            print(volume, start, end)
+        if volume not in ranges:
+            return False
+        for i in range(start, end + 1):
+            if i in ranges[volume]:
+                return True
+        return False
+
     def detect_missing(self, entries):
         found = []
         for line in self.read_input():
@@ -144,52 +175,75 @@ class Fetcher:
     def list_changes(self, timestamp):
         changes = self.site.recentchanges(
             start=timestamp,
-            namespace=0,
+            namespace='0|104',
             toponly=1,
             type="edit|new",
             dir="newer",
             show="!redirect|!anon|!bot",
         )
         result = {}
+        ranges = {}
         for change in changes:
             # print(change)
             title = change['title']
             if title.startswith(PREFIX):
                 result[title] = change
-        return result
+            elif title.startswith('Page:EB1911'):
+                print('Page:', title, file=sys.stderr)
+                m = re.match(r'Page:EB1911 - Volume (\d+).djvu/(\d+)', title)
+                volume = int(m.group(1))
+                index = int(m.group(2))
+                if volume not in ranges:
+                    ranges[volume] = []
+                ranges[volume].append(index)
+        return result, ranges
 
     def update(self, start=0, limit=None, timestamp=None, normalize=False):
         if not self.in_file:
             raise Exception('Update requires an input file')
-        changes = self.list_changes(timestamp)
+        changes, ranges = self.list_changes(timestamp)
+        print(ranges)
         num_entries = self.num_entries()
         def result():
             normalizer = Normalizer()
             count = 0
             for line in self.read_input(start, limit):
                 data = json.loads(line)
-                # print(data)
                 title = data['page']
-                # print(title)
-                # revdata = self.get_latest_revision(title)
-                # print(revdata, file=sys.stderr)
+                if 'volume' not in data or 'start' not in data or 'end' not in data:
+                    (volume, s, e) = self.detect_range(data)
+                    data['volume'] = volume
+                    data['start'] = s
+                    data['end'] = e
+                range_changed = self.range_changed(data, ranges)
+                page_changed = False
                 if title in changes:
                     change = changes[title]
-                    change['done'] = True
                     if change['revid'] > data['revid']:
-                        count += 1
-                        print(f'Page updated: {title}', file=sys.stderr)
-                        result = self.fetch_page(title)
-                        data['content'] = result['text']['*']
+                        page_changed = True
+                        change['done'] = True
                         data['revid'] = change['revid']
                         data['pageid'] = change['pageid']
-                        if normalize:
-                            data = normalizer.normalize(data)
+                if page_changed or range_changed:
+                    count += 1
+                    if page_changed:
+                        print(f'Page updated: {title}', file=sys.stderr)
+                    else:
+                        print(f'Range updated: {title}', file=sys.stderr)
+                    result = self.fetch_page(title)
+                    data['content'] = result['text']['*']
+                    (volume, s, e) = self.detect_range(data)
+                    data['volume'] = volume
+                    data['start'] = s
+                    data['end'] = e
+                    if normalize:
+                        data = normalizer.normalize(data)
                 yield json.dumps(data).decode('utf-8')
 
             # Fetch missing pages
+            """
             for change in changes.values():
-                if 'done' in change:
+                if 'done' in change or change['title'].startswith('Page:'):
                     continue
                 count += 1
                 title = change['title']
@@ -207,6 +261,7 @@ class Fetcher:
                 if normalize:
                     page = normalizer.normalize(page)
                 yield json.dumps(page).decode('utf-8')
+            """
 
             if count == 0:
                 print('Already up-to-date')
@@ -247,6 +302,11 @@ class Fetcher:
                 }
                 if normalize:
                     page = normalizer.normalize(page)
+                (volume, s, e) = self.detect_range(page)
+                print(volume)
+                page['volume'] = volume
+                page['start'] = s
+                page['end'] = e
                 yield json.dumps(page).decode('utf-8')
         self.output(result, len(entries), 'Fetching {} of {}')
 
@@ -387,14 +447,14 @@ if __name__ == '__main__':
     # parser.add_argument('fetch', help='Fetch articles')
     # parser.add_argument('--latest', action='store_true', help='Fetch latest revision')
     # parser.add_argument('update', help='Update pages')
-    parser.add_argument('--titles', help='List of titles separated by "|", or a file if started with "@"')
+    parser.add_argument('--titles', '-t', help='List of titles separated by "|", or a file if started with "@"')
     parser.add_argument('--outfile', '-o', help='Output file')
     parser.add_argument('--infile', '-i', help='Input file')
     parser.add_argument('--missing', '-m', action='store_true', help='Fetch missing only')
     parser.add_argument('--normalize', '-n', action='store_true', help='Normalize content (remove comments, etc.)')
     parser.add_argument('--start', '-s', default=0, type=int, help='Start from this index')
     parser.add_argument('--limit', '-l', default=sys.maxsize, type=int, help='Process these many entries')
-    parser.add_argument('--timestamp', '-t', default=sys.maxsize, type=str, help='Timstamp')
+    parser.add_argument('--timestamp', '-T', default=sys.maxsize, type=str, help='Timstamp')
     parser.add_argument('--goldendict', '-g', action='store_true', help='Optimize for goldendict')
     parser.add_argument('--no-progress', '-N', action='store_false', help='Don\'t show progress')
     args = parser.parse_args()
