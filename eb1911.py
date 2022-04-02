@@ -204,6 +204,7 @@ class Fetcher:
         def result():
             normalizer = Normalizer()
             count = 0
+            updated = {}
             for line in self.read_input(start, limit):
                 data = json.loads(line)
                 title = data['page']
@@ -218,7 +219,6 @@ class Fetcher:
                     change = changes[title]
                     if change['revid'] > data['revid']:
                         page_changed = True
-                        change['done'] = True
                         data['revid'] = change['revid']
                         data['pageid'] = change['pageid']
                 if page_changed or range_changed:
@@ -233,17 +233,17 @@ class Fetcher:
                     data['volume'] = volume
                     data['start'] = s
                     data['end'] = e
+                    updated[title] = True
                     if normalize:
                         data = normalizer.normalize(data)
                 yield json.dumps(data).decode('utf-8')
 
             # Fetch missing pages
-            """
             for change in changes.values():
-                if 'done' in change or change['title'].startswith('Page:'):
+                title = change['title']
+                if title in updated or title.startswith('Page:'):
                     continue
                 count += 1
-                title = change['title']
                 if change['type'] == 'new':
                     print(f'New page: {title}', file=sys.stderr)
                 else:
@@ -258,7 +258,6 @@ class Fetcher:
                 if normalize:
                     page = normalizer.normalize(page)
                 yield json.dumps(page).decode('utf-8')
-            """
 
             if count == 0:
                 print('Already up-to-date')
