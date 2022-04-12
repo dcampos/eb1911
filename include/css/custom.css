@@ -7,3 +7,8 @@ table.prettytable > tbody {
 th[style*="background-color: #CCCCFF"] {
     background-color: transparent !important;
 }
+
+img {
+    max-width: 100%;
+    height: auto;
+}

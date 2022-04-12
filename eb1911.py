@@ -33,6 +33,8 @@ import argparse
 import orjson as json
 import slob
 import itertools
+from datetime import datetime
+import os.path
 
 UA = 'EB1911/0.1.0 (dcampos@github/eb1911)'
 PREFIX = '1911 Encyclopædia Britannica'
@@ -87,6 +89,13 @@ class Fetcher:
             for entry in func():
                 print(entry)
                 i += 1
+
+    def read_timestamp(self) -> str:
+        if self.in_file:
+            mtime = os.path.getmtime(self.in_file)
+            dt = datetime.fromtimestamp(mtime)
+            return dt.strftime('%Y%m%d')
+        return ''
 
     def read_input(self, start=0, limit=sys.maxsize):
         if self.in_file:
@@ -199,6 +208,9 @@ class Fetcher:
     def update(self, start=0, limit=None, timestamp=None, normalize=False):
         if not self.in_file:
             raise Exception('Update requires an input file')
+        if not timestamp:
+            timestamp = self.read_timestamp()
+        timestamp = timestamp.ljust(14, '0')
         changes, ranges = self.list_changes(timestamp)
         num_entries = self.num_entries()
         def result():
@@ -347,6 +359,14 @@ class Fetcher:
 
     def write_slob(self, goldendict=False):
         dictionary = self.prepare_entries()
+
+        if not self.out_file:
+            raise Exception('No output file defined')
+
+        if os.path.exists(self.out_file):
+            print(f'Output file {self.out_file} file already exists!')
+            sys.exit(-1)
+
         with slob.create(self.out_file, min_bin_size=512*1024, observer=observer) as s:
             num_entries = len(dictionary)
             if not goldendict:
@@ -450,7 +470,7 @@ if __name__ == '__main__':
     parser.add_argument('--normalize', '-n', action='store_true', help='Normalize content (remove comments, etc.)')
     parser.add_argument('--start', '-s', default=0, type=int, help='Start from this index')
     parser.add_argument('--limit', '-l', default=sys.maxsize, type=int, help='Process these many entries')
-    parser.add_argument('--timestamp', '-T', default=sys.maxsize, type=str, help='Timstamp')
+    parser.add_argument('--timestamp', '-T', type=str, help='Timstamp')
     parser.add_argument('--goldendict', '-g', action='store_true', help='Optimize for goldendict')
     parser.add_argument('--no-progress', '-N', action='store_false', help='Don\'t show progress')
     args = parser.parse_args()
