@@ -37,7 +37,7 @@ jobs:
           echo "${{ steps.get_release.outputs.body }}"
 
       - name: Create release tag
-        uses: actions/github-script@v5
+        uses: actions/github-script@v6
         with:
           script: |
             github.rest.git.createRef({
