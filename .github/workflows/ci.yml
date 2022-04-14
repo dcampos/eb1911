@@ -54,11 +54,22 @@ jobs:
         run: |
           bzip2 all.json
 
+      # - name: Create release tag
+      #   uses: rickstaa/action-create-tag@v1
+      #   with:
+      #     tag: "${{ steps.vars.outputs.current_timestamp }}"
+      #     message: "Latest release"
+
       - name: Create release tag
-        uses: rickstaa/action-create-tag@v1
+        uses: actions/github-script@v5
         with:
-          tag: "${{ steps.vars.outputs.current_timestamp }}"
-          message: "Latest release"
+          script: |
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/${{ steps.vars.outputs.current_timestamp }}',
+              sha: context.sha
+            })
 
       - name: Store commmand output
         run: |
