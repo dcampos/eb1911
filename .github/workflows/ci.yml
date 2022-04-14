@@ -36,6 +36,17 @@ jobs:
           echo "::set-output name=current_timestamp::$(date +'%Y%m%d%H%M%S')"
           echo "${{ steps.get_release.outputs.body }}"
 
+      - name: Create release tag
+        uses: actions/github-script@v5
+        with:
+          script: |
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/${{ steps.vars.outputs.current_timestamp }}',
+              sha: context.sha
+            })
+
       - name: Update articles
         id: update
         env:
@@ -54,11 +65,11 @@ jobs:
         run: |
           bzip2 all.json
 
-      - name: Create release tag
-        uses: rickstaa/action-create-tag@v1
-        with:
-          tag: "${{ steps.vars.outputs.current_timestamp }}"
-          message: "Latest release"
+      # - name: Create release tag
+      #   uses: rickstaa/action-create-tag@v1
+      #   with:
+      #     tag: "${{ steps.vars.outputs.current_timestamp }}"
+      #     message: "Latest release"
 
       - name: Store commmand output
         run: |

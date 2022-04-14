@@ -444,7 +444,7 @@ class Normalizer:
             span.decompose()
         # Delete comments
         main = soup.find('div', {'class': 'mw-parser-output'})
-        for element in main(text=lambda text: isinstance(text, Comment)):
+        for element in main(string=lambda text: isinstance(text, Comment)):
             element.extract()
         return str(soup)
 
