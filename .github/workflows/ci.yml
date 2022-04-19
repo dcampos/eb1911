@@ -32,7 +32,7 @@ jobs:
       - name: Set vars
         id: vars
         run: |
-          echo "::set-output name=old_timestamp::$(echo '${{ steps.get_release.outputs.body }}' | head -1 | cut -f2 -d' ')"
+          echo "::set-output name=old_timestamp::$(echo \"${{ steps.get_release.outputs.body }}\" | head -1 | cut -f2 -d' ')"
           echo "::set-output name=current_timestamp::$(date +'%Y%m%d%H%M%S')"
           echo "${{ steps.get_release.outputs.body }}"
 
