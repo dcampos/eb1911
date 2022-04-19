@@ -21,7 +21,7 @@ jobs:
 
       - name: Fetch the latest release
         id: get_release
-        uses: dsaltares/fetch-gh-release-asset@master
+        uses: dsaltares/fetch-gh-release-asset@0.0.8
         with:
           repo: "dcampos/eb1911"
           # version: "tags/nightly"
