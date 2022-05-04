@@ -24405,6 +24405,7 @@
 1911 Encyclopædia Britannica/Messiah
 1911 Encyclopædia Britannica/Messina
 1911 Encyclopædia Britannica/Messuage
+1911 Encyclopædia Britannica/Mestizo
 1911 Encyclopædia Britannica/Mesureur, Gustave Emil Eugène
 1911 Encyclopædia Britannica/Meta
 1911 Encyclopædia Britannica/Metabolic Diseases
@@ -24445,6 +24446,7 @@
 1911 Encyclopædia Britannica/Methodist New Connexion
 1911 Encyclopædia Britannica/Methodius
 1911 Encyclopædia Britannica/Methuen, Barony of
+1911 Encyclopædia Britannica/Methuselah
 1911 Encyclopædia Britannica/Methven
 1911 Encyclopædia Britannica/Methyl Alcohol
 1911 Encyclopædia Britannica/Meticulous
@@ -24545,6 +24547,7 @@
 1911 Encyclopædia Britannica/Microcline
 1911 Encyclopædia Britannica/Microcosm
 1911 Encyclopædia Britannica/Microcosmic Salt
+1911 Encyclopædia Britannica/Micrometer
 1911 Encyclopædia Britannica/Micronesia
 1911 Encyclopædia Britannica/Micronucleus
 1911 Encyclopædia Britannica/Micropegmatite
@@ -24609,7 +24612,9 @@
 1911 Encyclopædia Britannica/Milford Haven
 1911 Encyclopædia Britannica/Milford (Massachusetts)
 1911 Encyclopædia Britannica/Milicz
+1911 Encyclopædia Britannica/Military Frontier
 1911 Encyclopædia Britannica/Military Law
+1911 Encyclopædia Britannica/Milk
 1911 Encyclopædia Britannica/Milkwort
 1911 Encyclopædia Britannica/Mill
 1911 Encyclopædia Britannica/Millais, Sir John Everett
@@ -25395,12 +25400,14 @@
 1911 Encyclopædia Britannica/Moxos
 1911 Encyclopædia Britannica/Mozambique
 1911 Encyclopædia Britannica/Mozart, Wolfgang Amadeus
+1911 Encyclopædia Britannica/Mozdok
 1911 Encyclopædia Britannica/Mozley, James Bowling
 1911 Encyclopædia Britannica/Mozley, Thomas
 1911 Encyclopædia Britannica/Mruli
 1911 Encyclopædia Britannica/Mt Athos
 1911 Encyclopædia Britannica/Mt. Elgon
 1911 Encyclopædia Britannica/Mtsensk
+1911 Encyclopædia Britannica/Mtskhet
 1911 Encyclopædia Britannica/Mubarrad
 1911 Encyclopædia Britannica/Much Wenlock
 1911 Encyclopædia Britannica/Mucianus, Licinius
@@ -25457,6 +25464,7 @@
 1911 Encyclopædia Britannica/Müllner, Amandus Gottfried Adolf
 1911 Encyclopædia Britannica/Mulock, Sir William
 1911 Encyclopædia Britannica/Mulready, William
+1911 Encyclopædia Britannica/Multan
 1911 Encyclopædia Britannica/Multiplepoinding
 1911 Encyclopædia Britannica/Multituberculata
 1911 Encyclopædia Britannica/Mummers
@@ -25631,6 +25639,7 @@
 1911 Encyclopædia Britannica/Myrrh
 1911 Encyclopædia Britannica/Myrtle
 1911 Encyclopædia Britannica/Mysia
+1911 Encyclopædia Britannica/Myslowitz
 1911 Encyclopædia Britannica/Mysore (state)
 1911 Encyclopædia Britannica/Mysore (town)
 1911 Encyclopædia Britannica/Mystery
@@ -25839,6 +25848,7 @@
 1911 Encyclopædia Britannica/Navvy
 1911 Encyclopædia Britannica/Navy
 1911 Encyclopædia Britannica/Nawab
+1911 Encyclopædia Britannica/Nawabganj
 1911 Encyclopædia Britannica/Nawanagar
 1911 Encyclopædia Britannica/Nawāwī
 1911 Encyclopædia Britannica/Naxos (Cyclades)
@@ -26013,7 +26023,9 @@
 1911 Encyclopædia Britannica/Neuroptera
 1911 Encyclopædia Britannica/Neusalz
 1911 Encyclopædia Britannica/Neuss
+1911 Encyclopædia Britannica/Neustadt
 1911 Encyclopædia Britannica/Neustadt-an-der-Haardt
+1911 Encyclopædia Britannica/Neu-Stettin
 1911 Encyclopædia Britannica/Neu-Strelitz
 1911 Encyclopædia Britannica/Neustria
 1911 Encyclopædia Britannica/Neutitschein
@@ -26226,7 +26238,9 @@
 1911 Encyclopædia Britannica/Nieuport
 1911 Encyclopædia Britannica/Nièvre
 1911 Encyclopædia Britannica/Nifo, Agostino
+1911 Encyclopædia Britannica/Nigdeh
 1911 Encyclopædia Britannica/Nigel
+1911 Encyclopædia Britannica/Niger
 1911 Encyclopædia Britannica/Niger, Gaius Pescennius
 1911 Encyclopædia Britannica/Nigeria
 1911 Encyclopædia Britannica/Night
@@ -26489,6 +26503,8 @@
 1911 Encyclopædia Britannica/Novibazar
 1911 Encyclopædia Britannica/Novice
 1911 Encyclopædia Britannica/Novi Ligure
+1911 Encyclopædia Britannica/Novo-Bayazet
+1911 Encyclopædia Britannica/Novocherkassk
 1911 Encyclopædia Britannica/Novogeorgievsk
 1911 Encyclopædia Britannica/Novomoskovsk
 1911 Encyclopædia Britannica/Novo-Radomsk
@@ -26693,6 +26709,7 @@
 1911 Encyclopædia Britannica/Odense
 1911 Encyclopædia Britannica/Odenwald
 1911 Encyclopædia Britannica/Oder
+1911 Encyclopædia Britannica/Oderberg
 1911 Encyclopædia Britannica/Odescalchi-Erba
 1911 Encyclopædia Britannica/Odessa
 1911 Encyclopædia Britannica/Odeum
@@ -26760,6 +26777,7 @@
 1911 Encyclopædia Britannica/Ohio
 1911 Encyclopædia Britannica/Ohio Company
 1911 Encyclopædia Britannica/Ohio River
+1911 Encyclopædia Britannica/Ohlau
 1911 Encyclopædia Britannica/Öhlenschläger, Adam Gottlob
 1911 Encyclopædia Britannica/Ohligs
 1911 Encyclopædia Britannica/Ohm, Georg Simon
@@ -26917,6 +26935,7 @@
 1911 Encyclopædia Britannica/Oporto
 1911 Encyclopædia Britannica/Opossum
 1911 Encyclopædia Britannica/Oppel, Carl Albert
+1911 Encyclopædia Britannica/Oppeln
 1911 Encyclopædia Britannica/Oppenheim
 1911 Encyclopædia Britannica/Oppert, Julius
 1911 Encyclopædia Britannica/Oppian
@@ -28552,6 +28571,7 @@
 1911 Encyclopædia Britannica/Pilchard
 1911 Encyclopædia Britannica/Pilgrim
 1911 Encyclopædia Britannica/Pilgrimage
+1911 Encyclopædia Britannica/Pillau
 1911 Encyclopædia Britannica/Pillion
 1911 Encyclopædia Britannica/Pillnitz
 1911 Encyclopædia Britannica/Pillory
@@ -28604,6 +28624,8 @@
 1911 Encyclopædia Britannica/Pio di Savoia
 1911 Encyclopædia Britannica/Piombino
 1911 Encyclopædia Britannica/Pioneer
+1911 Encyclopædia Britannica/Piotrkow (government)
+1911 Encyclopædia Britannica/Piotrkow (town)
 1911 Encyclopædia Britannica/Piozzi, Hester Lynch
 1911 Encyclopædia Britannica/Pipe
 1911 Encyclopædia Britannica/Pipe and Tabor
@@ -29033,6 +29055,7 @@
 1911 Encyclopædia Britannica/Poppy
 1911 Encyclopædia Britannica/Poppy Heads
 1911 Encyclopædia Britannica/Poppy Oil
+1911 Encyclopædia Britannica/Population
 1911 Encyclopædia Britannica/Populonium
 1911 Encyclopædia Britannica/Porbandar
 1911 Encyclopædia Britannica/Porcelain
@@ -29054,6 +29077,7 @@
 1911 Encyclopædia Britannica/Porson, Richard
 1911 Encyclopædia Britannica/Port
 1911 Encyclopædia Britannica/Port Adelaide
+1911 Encyclopædia Britannica/Portadown
 1911 Encyclopædia Britannica/Portaels, Jean François
 1911 Encyclopædia Britannica/Portage
 1911 Encyclopædia Britannica/Portage la Prairie
@@ -29282,7 +29306,9 @@
 1911 Encyclopædia Britannica/Preceptor
 1911 Encyclopædia Britannica/Precession of the Equinoxes
 1911 Encyclopædia Britannica/Precinct
+1911 Encyclopædia Britannica/Precious
 1911 Encyclopædia Britannica/Preconization
+1911 Encyclopædia Britannica/Predella
 1911 Encyclopædia Britannica/Predestination
 1911 Encyclopædia Britannica/Predicables
 1911 Encyclopædia Britannica/Predicament
@@ -29624,8 +29650,10 @@
 1911 Encyclopædia Britannica/Pulley
 1911 Encyclopædia Britannica/Pullman
 1911 Encyclopædia Britannica/Pulpit
+1911 Encyclopædia Britannica/Pulque
 1911 Encyclopædia Britannica/Pulse
 1911 Encyclopædia Britannica/Pulszky, Ferencz Aurel
+1911 Encyclopædia Britannica/Pultusk
 1911 Encyclopædia Britannica/Puma
 1911 Encyclopædia Britannica/Pumice
 1911 Encyclopædia Britannica/Pumpkin
@@ -29647,12 +29675,14 @@
 1911 Encyclopædia Britannica/Purchas, Samuel
 1911 Encyclopædia Britannica/Purdah
 1911 Encyclopædia Britannica/Purgatory
+1911 Encyclopædia Britannica/Puri
 1911 Encyclopædia Britannica/Purification
 1911 Encyclopædia Britannica/Purim
 1911 Encyclopædia Britannica/Purin
 1911 Encyclopædia Britannica/Puritanism
 1911 Encyclopædia Britannica/Purlieu
 1911 Encyclopædia Britannica/Purlin
+1911 Encyclopædia Britannica/Purnea
 1911 Encyclopædia Britannica/Purple
 1911 Encyclopædia Britannica/Purpura
 1911 Encyclopædia Britannica/Purrah
@@ -29707,6 +29737,7 @@
 1911 Encyclopædia Britannica/Pyrgi
 1911 Encyclopædia Britannica/Pyrgos
 1911 Encyclopædia Britannica/Pyrites
+1911 Encyclopædia Britannica/Pyritz
 1911 Encyclopædia Britannica/Pyrocatechin
 1911 Encyclopædia Britannica/Pyrogallol
 1911 Encyclopædia Britannica/Pyrolusite
@@ -29988,6 +30019,7 @@
 1911 Encyclopædia Britannica/Rambouillet, Catherine de Vivonne, Marquise de
 1911 Encyclopædia Britannica/Rameau, Jean Philippe
 1911 Encyclopædia Britannica/Rameses
+1911 Encyclopædia Britannica/Rameswaram
 1911 Encyclopædia Britannica/Ramie
 1911 Encyclopædia Britannica/Ramillies
 1911 Encyclopædia Britannica/Ramler, Karl Wilhelm
@@ -30020,8 +30052,13 @@
 1911 Encyclopædia Britannica/Ranavalo III.
 1911 Encyclopædia Britannica/Ranc, Arthur
 1911 Encyclopædia Britannica/Rancé, Armand Jean le Bouthillier de
+1911 Encyclopædia Britannica/Ranch
+1911 Encyclopædia Britannica/Ranchi
+1911 Encyclopædia Britannica/Rand
 1911 Encyclopædia Britannica/Randall, Samuel Jackson
 1911 Encyclopædia Britannica/Randan
+1911 Encyclopædia Britannica/Randazzo
+1911 Encyclopædia Britannica/Randers
 1911 Encyclopædia Britannica/Randolph, Edmund
 1911 Encyclopædia Britannica/Randolph, John
 1911 Encyclopædia Britannica/Randolph, Peyton
@@ -30439,6 +30476,7 @@
 1911 Encyclopædia Britannica/Reus
 1911 Encyclopædia Britannica/Reusch, Franz Heinrich
 1911 Encyclopædia Britannica/Reusch, Hans Henrik
+1911 Encyclopædia Britannica/Reuss
 1911 Encyclopædia Britannica/Reuss, August Emanuel von
 1911 Encyclopædia Britannica/Reuss, Édouard Guillaume Eugene
 1911 Encyclopædia Britannica/Reuter, Fritz
@@ -31247,6 +31285,7 @@
 1911 Encyclopædia Britannica/Ryder, Albert Pinkham
 1911 Encyclopædia Britannica/Rye (borough)
 1911 Encyclopædia Britannica/Rye (plant)
+1911 Encyclopædia Britannica/Ryezhitsa
 1911 Encyclopædia Britannica/Rylands, John
 1911 Encyclopædia Britannica/Ryland, William Wynne
 1911 Encyclopædia Britannica/Ryle, John Charles
@@ -31531,6 +31570,8 @@
 1911 Encyclopædia Britannica/Salyes
 1911 Encyclopædia Britannica/Salza, Hermann von
 1911 Encyclopædia Britannica/Salzbrunn
+1911 Encyclopædia Britannica/Salzburg (city)
+1911 Encyclopædia Britannica/Salzburg (duchy)
 1911 Encyclopædia Britannica/Salzkammergut
 1911 Encyclopædia Britannica/Salzwedel
 1911 Encyclopædia Britannica/Samain, Albert Victor
@@ -32550,7 +32591,10 @@
 1911 Encyclopædia Britannica/Shannon
 1911 Encyclopædia Britannica/Shannon, Charles Hazelwood
 1911 Encyclopædia Britannica/Shannon, James Jebusa
+1911 Encyclopædia Britannica/Shans
+1911 Encyclopædia Britannica/Shan-si
 1911 Encyclopædia Britannica/Shan States
+1911 Encyclopædia Britannica/Shan-tung
 1911 Encyclopædia Britannica/Shapira, M. W.
 1911 Encyclopædia Britannica/Shapur
 1911 Encyclopædia Britannica/Share
@@ -32614,6 +32658,7 @@
 1911 Encyclopædia Britannica/Shenandoah
 1911 Encyclopædia Britannica/Shenandoah Valley Campaigns
 1911 Encyclopædia Britannica/Shendi
+1911 Encyclopædia Britannica/Shêng-king
 1911 Encyclopædia Britannica/Shen-si
 1911 Encyclopædia Britannica/Shenstone, William
 1911 Encyclopædia Britannica/Sheppard, John
@@ -33450,6 +33495,7 @@
 1911 Encyclopædia Britannica/Sphere
 1911 Encyclopædia Britannica/Spheres, Music of the
 1911 Encyclopædia Britannica/Spheres of Influence
+1911 Encyclopædia Britannica/Spherical Harmonics
 1911 Encyclopædia Britannica/Spheroid
 1911 Encyclopædia Britannica/Spherometer
 1911 Encyclopædia Britannica/Spherulites
@@ -34003,6 +34049,7 @@
 1911 Encyclopædia Britannica/St Peter
 1911 Encyclopædia Britannica/St Peter Port
 1911 Encyclopædia Britannica/St Petersburg
+1911 Encyclopædia Britannica/St Petersburg (government)
 1911 Encyclopædia Britannica/St Pierre and Miquelon
 1911 Encyclopædia Britannica/St Pol, Counts of
 1911 Encyclopædia Britannica/St Pol-de-Léon

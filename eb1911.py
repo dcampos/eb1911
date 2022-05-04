@@ -311,7 +311,7 @@ class Fetcher:
                 if normalize:
                     page = normalizer.normalize(page)
                 (volume, s, e) = self.detect_range(page)
-                print(volume)
+                # print(volume)
                 page['volume'] = volume
                 page['start'] = s
                 page['end'] = e
