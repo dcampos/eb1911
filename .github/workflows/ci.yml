@@ -52,12 +52,14 @@ jobs:
         env:
           OLD_TIMESTAMP: ${{ steps.vars.outputs.old_timestamp }}
         run: |
+          set -e
           ./eb1911.py update -n -i data/all.json.bz2 -o all.json -T $OLD_TIMESTAMP 2>&1 | tee output.txt
 
       - name: Create slob dictionaries
         env:
           CUR_TIMESTAMP: ${{ steps.vars.outputs.current_timestamp }}
         run: |
+          ls --foo
           ./eb1911.py slob --no-progress -i all.json -o eb1911.slob
           ./eb1911.py slob --no-progress -i all.json -o eb1911-gd.slob -g
 
