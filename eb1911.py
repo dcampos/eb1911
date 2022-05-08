@@ -295,7 +295,8 @@ class Fetcher:
             if not self.in_file:
                 raise Exception('Fetch missing requires an input file')
             entries = self.detect_missing(entries)
-            print(f'missing entries: {entries}', file=sys.stderr)
+            print(f'missing entries:', file=sys.stderr)
+            print('\n'.join(entries), file=sys.stderr)
 
         normalizer = Normalizer()
 
