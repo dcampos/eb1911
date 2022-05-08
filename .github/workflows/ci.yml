@@ -64,6 +64,7 @@ jobs:
           bunzip2 -f entries.txt.bz2
           ./eb1911.py list | sort >|entries.txt
           ./eb1911.py fetch -n --missing --no-progress -i all.json --titles @entries.txt -o missing.json 2>&1 | tee -a output.txt
+          cat missing.json >>all.json
 
       - name: Create slob dictionaries
         env:
