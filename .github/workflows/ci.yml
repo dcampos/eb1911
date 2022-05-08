@@ -19,14 +19,21 @@ jobs:
           cache: 'pip'
       - run: pip install -r requirements.txt
 
-      - name: Fetch the latest release
+      - name: Fetch latest compressed data 
         id: get_release
         uses: dsaltares/fetch-gh-release-asset@0.0.8
         with:
           repo: "dcampos/eb1911"
-          # version: "tags/nightly"
           file: "all.json.bz2"
           target: "data/all.json.bz2"
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fetch latest compressed data 
+        uses: dsaltares/fetch-gh-release-asset@0.0.8
+        with:
+          repo: "dcampos/eb1911"
+          file: "entries.txt.bz2"
+          target: "entries.txt.bz2"
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set vars
@@ -52,18 +59,24 @@ jobs:
         env:
           OLD_TIMESTAMP: ${{ steps.vars.outputs.old_timestamp }}
         run: |
+          set -e
           ./eb1911.py update -n -i data/all.json.bz2 -o all.json -T $OLD_TIMESTAMP 2>&1 | tee output.txt
+          bunzip2 entries.txt.bz2
+          ./eb1911.py list | sort >|entries.txt
+          ./eb1911.py fetch -n --missing --no-progress -i all.json --titles @entries.txt -o missing.json 2>&1 | tee -a output.txt
 
       - name: Create slob dictionaries
         env:
           CUR_TIMESTAMP: ${{ steps.vars.outputs.current_timestamp }}
         run: |
+          set -e
           ./eb1911.py slob --no-progress -i all.json -o eb1911.slob
           ./eb1911.py slob --no-progress -i all.json -o eb1911-gd.slob -g
 
       - name: Compress result
         run: |
-          bzip2 all.json
+          bzip2 -k all.json
+          bzip2 -k entries.txt
 
       # - name: Create release tag
       #   uses: rickstaa/action-create-tag@v1
@@ -84,6 +97,7 @@ jobs:
             all.json.bz2
             eb1911.slob
             eb1911-gd.slob
+            entries.txt.bz2
           name: "1911 Encyclopædia Britannica"
           tag_name: ${{ steps.vars.outputs.current_timestamp }}
           # body: "Timestamp: ${{ steps.vars.outputs.current_timestamp }}"
