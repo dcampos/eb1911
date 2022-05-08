@@ -229,7 +229,7 @@ class Fetcher:
                 page_changed = False
                 if title in changes:
                     change = changes[title]
-                    if change['revid'] > data['revid']:
+                    if int(change['revid']) > int(data['revid']):
                         page_changed = True
                         data['revid'] = change['revid']
                         data['pageid'] = change['pageid']
