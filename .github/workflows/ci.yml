@@ -4,7 +4,7 @@ on:
   push:
     branches: 'master'
   schedule:
-    - cron: '0 15 * * *'
+    - cron: '0 15 * * 6'
 
 jobs:
   update:
