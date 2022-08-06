@@ -122,19 +122,23 @@ class Fetcher:
             try:
                 if 'data-page-name' in div:
                     page_name = div['data-page-name']
-                else:
+                elif 'title' in div:
                     page_name = div['title']
+                else:
+                    # No way to detect the volume
+                    break
                 page_name = page_name.replace('_', ' ')
                 m = re.match(r'Page:EB1911 - Volume (\d+).djvu/(\d+)', page_name)
+                if m == None:
+                    break
                 if not volume:
                     volume = int(m.group(1))
                 if 'data-page-index' in div:
                     index = int(div['data-page-index'])
                 else:
                     index = int(m.group(2))
-                # print(index)
             except KeyError as e:
-                print(e, file=sys.stderr)
+                print(f'KeyError: {e} not found for page {data["page"]}', file=sys.stderr)
                 break
             start = min(start, index)
             end = max(end, index)
