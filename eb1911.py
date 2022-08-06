@@ -120,12 +120,21 @@ class Fetcher:
         end = 0
         for div in soup.find_all('span', {'class': 'pagenum'}):
             try:
-                page_name = div['data-page-name']
-                m = re.match(r'Page:EB1911 - Volume (\d+).djvu/\d+', page_name)
+                if 'data-page-name' in div:
+                    page_name = div['data-page-name']
+                else:
+                    page_name = div['title']
+                page_name = page_name.replace('_', ' ')
+                m = re.match(r'Page:EB1911 - Volume (\d+).djvu/(\d+)', page_name)
                 if not volume:
                     volume = int(m.group(1))
-                index = int(div['data-page-index'])
-            except KeyError:
+                if 'data-page-index' in div:
+                    index = int(div['data-page-index'])
+                else:
+                    index = int(m.group(2))
+                # print(index)
+            except KeyError as e:
+                print(e, file=sys.stderr)
                 break
             start = min(start, index)
             end = max(end, index)
@@ -137,9 +146,13 @@ class Fetcher:
         volume, start, end = data['volume'], data['start'], data['end']
         if volume not in ranges:
             return False
-        for i in range(start, end + 1):
-            if i in ranges[volume]:
-                return True
+        try:
+            for i in range(start, end + 1):
+                if i in ranges[volume]:
+                    return True
+        except Exception as e:
+            print(e, file=sys.stderr)
+            sys.exit(-1)
         return False
 
     def detect_missing(self, entries):
@@ -220,7 +233,7 @@ class Fetcher:
             for line in self.read_input(start, limit):
                 data = json.loads(line)
                 title = data['page']
-                if 'volume' not in data or 'start' not in data or 'end' not in data:
+                if 'volume' not in data or 'start' not in data or 'end' not in data or data['volume'] == None or data['start'] == None or data['end'] == None:
                     (volume, s, e) = self.detect_range(data)
                     data['volume'] = volume
                     data['start'] = s
