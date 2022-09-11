@@ -85,11 +85,11 @@ jobs:
       #     tag: "${{ steps.vars.outputs.current_timestamp }}"
       #     message: "Latest release"
 
-      - name: Store commmand output
-        run: |
-          echo 'CMD_OUTPUT<<EOF' >> $GITHUB_ENV
-          cat output.txt >> $GITHUB_ENV
-          echo 'EOF' >> $GITHUB_ENV
+      # - name: Store commmand output
+      #   run: |
+      #     echo 'CMD_OUTPUT<<EOF' >> $GITHUB_ENV
+      #     cat output.txt >> $GITHUB_ENV
+      #     echo 'EOF' >> $GITHUB_ENV
 
       - name: Release
         uses: softprops/action-gh-release@v1
@@ -99,16 +99,13 @@ jobs:
             eb1911.slob
             eb1911-gd.slob
             entries.txt.bz2
+            output.txt
           name: "1911 Encyclopædia Britannica"
           tag_name: ${{ steps.vars.outputs.current_timestamp }}
           # body: "Timestamp: ${{ steps.vars.outputs.current_timestamp }}"
           # body_path: output.txt
           body: |
             Timestamp: ${{ steps.vars.outputs.current_timestamp }}
-            Command output:
-            ```
-            ${{ env.CMD_OUTPUT }}
-            ```
 
       - name: Display the details
         run: |
