@@ -102,10 +102,6 @@ jobs:
             output.txt
           name: "1911 Encyclopædia Britannica"
           tag_name: ${{ steps.vars.outputs.current_timestamp }}
-          # body: "Timestamp: ${{ steps.vars.outputs.current_timestamp }}"
-          # body_path: output.txt
-          body: |
-            Timestamp: ${{ steps.vars.outputs.current_timestamp }}
 
       - name: Display the details
         run: |
