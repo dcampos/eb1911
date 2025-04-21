@@ -79,6 +79,8 @@ class Fetcher:
     def output(self, func, count=None, pat='Processing {} of {}'):
         i = 1
         if self.out_file:
+            if os.path.exists(self.out_file):
+                raise FileExistsError()
             with open(self.out_file, 'w+') as out:
                 for entry in func():
                     out.write(entry + '\n')
@@ -293,7 +295,7 @@ class Fetcher:
 
         self.output(result, num_entries)
 
-    def fetch(self, titles, missing=False, normalize=True):
+    def fetch(self, titles, start, limit, missing=False, normalize=True):
         if not titles:
             raise Exception('Fetch requires a list of titles')
 
@@ -303,7 +305,7 @@ class Fetcher:
             # Read file containing titles
             fname = titles[1:]
             with open(fname, 'r+') as lines:
-                for line in lines:
+                for line in itertools.islice(lines, start, start + limit):
                     entries.append(line[:-1])
         else:
             entries = titles.split('|')
@@ -319,6 +321,7 @@ class Fetcher:
 
         def result():
             for entry in entries:
+                # print(f'fetching page {entry}...')
                 res = self.fetch_page(entry)
                 page = {
                     'page': res['title'],
@@ -455,7 +458,7 @@ class Normalizer:
     def clean_html(self, content):
         soup = BeautifulSoup(content, 'html.parser')
         # Delete header
-        for div in soup.find_all('div', {'id': 'headerContainer'}):
+        for div in soup.find_all('div', {'class': 'ws-header'}):
             div.decompose()
         # Delete edit links
         for span in soup.find_all('span', {'class': 'mw-editsection'}):
@@ -474,15 +477,16 @@ class Normalizer:
         page['content'] = content
         return page
 
+def new_file(path):
+    if os.path.exists(path):
+        raise argparse.ArgumentTypeError(f"File {path} already exists")
+    return path
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('cmd', help='Command to run', choices=['list', 'fetch', 'update', 'slob', 'normalize'])
-    # parser.add_argument('fetch', help='Fetch articles')
-    # parser.add_argument('--latest', action='store_true', help='Fetch latest revision')
-    # parser.add_argument('update', help='Update pages')
     parser.add_argument('--titles', '-t', help='List of titles separated by "|", or a file if started with "@"')
-    parser.add_argument('--outfile', '-o', help='Output file')
+    parser.add_argument('--outfile', '-o', help='Output file', type=new_file)
     parser.add_argument('--infile', '-i', help='Input file')
     parser.add_argument('--missing', '-m', action='store_true', help='Fetch missing only')
     parser.add_argument('--normalize', '-n', action='store_true', help='Normalize content (remove comments, etc.)')
@@ -498,7 +502,7 @@ if __name__ == '__main__':
     if args.cmd == 'list':
         fetcher.list_pages()
     elif args.cmd == 'fetch':
-        fetcher.fetch(args.titles, missing=args.missing, normalize=args.normalize)
+        fetcher.fetch(args.titles, args.start, args.limit, missing=args.missing, normalize=args.normalize)
     elif args.cmd == 'update':
         # print('timestamp:', args.timestamp)
         fetcher.update(limit=args.limit, start=args.start, timestamp=args.timestamp, normalize=args.normalize)
