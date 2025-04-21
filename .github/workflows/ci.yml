@@ -39,7 +39,7 @@ jobs:
       - name: Set vars
         id: vars
         run: |
-          echo "old_timestamp=$(echo '${{ steps.get_release.outputs.body }}' | head -1 | cut -f2 -d' ')" >> "$GITHUB_OUTPUT"
+          echo "old_timestamp=$(date -r data/all.json.bz2 +'%Y%m%d%H%M%S')" >> "$GITHUB_OUTPUT"
           echo "current_timestamp=$(date +'%Y%m%d%H%M%S')" >> "$GITHUB_OUTPUT"
           echo "${{ steps.get_release.outputs.body }}"
 
