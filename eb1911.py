@@ -438,6 +438,8 @@ class Normalizer:
         article = value.group(1)
         article = article.replace('_', '%20')
         article = article.replace('/', '%2F')
+        # Remove anchors
+        article = re.sub('#.*', '', article)
         return f'href=\"{article}\"'
 
     def fix_links(self, content):
@@ -451,8 +453,14 @@ class Normalizer:
         content = re.sub('href=\"((?!(http|/|#)).*?)\"', self.normalize_ref, content)
         return content
 
+    def normalize_url(self, match):
+        attribute = match.group(1)
+        value = match.group(2)
+        value = re.sub(r'(?<!:)(//)', r'https://', value)
+        return f'{attribute}="{value}"'
+
     def fix_imgs(self, content):
-        content = re.sub('src=\"//', 'src=\"https://', content)
+        content = re.sub(r'(src|srcset)="(.*?)"', self.normalize_url, content)
         return content
 
     def clean_html(self, content):
